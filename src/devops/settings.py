@@ -1,6 +1,8 @@
 import os
 
-DRIVER = 'devops.driver.libvirt.libvirt_driver'
+VIRTUAL_DRIVER = 'devops.driver.libvirt.libvirt_driver'
+REAL_DRIVER = 'devops.driver.hardware.ipmi_driver'
+
 INSTALLED_APPS = ['devops']
 
 DATABASES = {

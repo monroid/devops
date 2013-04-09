@@ -62,7 +62,7 @@ class Manager(object):
 
     def node_create(self, name, environment=None, role=None, vcpu=2,
                     memory=1024, has_vnc=True, metadata=None, hypervisor='kvm',
-                    os_type='hvm', architecture='x86_64', boot=None):
+                    os_type='hvm', architecture='x86_64', boot=None, virtual='true'):
         """
         :rtype : Node
         """
@@ -72,7 +72,22 @@ class Manager(object):
             name=name, environment=environment,
             role=role, vcpu=vcpu, memory=memory,
             has_vnc=has_vnc, metadata=metadata, hypervisor=hypervisor,
-            os_type=os_type, architecture=architecture,
+            os_type=os_type, architecture=architecture, virtual=virtual
+        )
+        node.boot = boot
+        return node
+
+    def node_create_hw(self, name, environment=None, role=None, vcpu=2,
+                    memory=1024, has_vnc=True, metadata=None, hypervisor='kvm',
+                    os_type='hvm', architecture='x86_64', boot=None, virtual='false'):
+        """
+        :rtype : Node
+        """
+        node = Node.objects.create(
+            name=name, environment=environment,
+            role=role, vcpu=vcpu, memory=memory,
+            has_vnc=False, metadata=metadata, hypervisor=hypervisor,
+            os_type=os_type, architecture=architecture, virtual=virtual
         )
         node.boot = boot
         return node
