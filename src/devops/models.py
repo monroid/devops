@@ -1,4 +1,4 @@
-from devops.settings import DRIVER
+from devops.settings import REAL_DRIVER, VIRTUAL_DRIVER
 from django.utils.importlib import import_module
 from ipaddr import IPNetwork
 from django.db import models
@@ -94,16 +94,18 @@ class Environment(models.Model):
 
 
 class ExternalModel(models.Model):
-    _driver = None
-
-    @classmethod
-    def get_driver(cls):
+    
+    def get_driver(self):
         """
         :rtype : DevopsDriver
         """
-        driver = import_module(DRIVER)
-        cls._driver = cls._driver or driver.DevopsDriver()
-        return cls._driver
+        if self.driver == None:
+            if self.virtual == 'true':
+                driver = import_module(VIRTUAL_DRIVER)
+                return driver.DevopsDriver()
+            else:
+                driver = import_module(REAL_DRIVER)
+                return driver.IpmiDriver()
 
     @property
     def driver(self):
@@ -199,6 +201,7 @@ class Network(ExternalModel):
 
 class Node(ExternalModel):
     hypervisor = choices('kvm')
+    virtual = choices('true','false')
     os_type = choices('hvm')
     architecture = choices('x86_64', 'i686')
     boot = ['network', 'cdrom', 'hd']
